@@ -1,0 +1,55 @@
+services:
+  redis:
+    image: redis
+    container_name: "redis"
+    networks:
+      - frontendd
+
+
+  db:
+    image: postgres:latest
+    container_name: "db"
+    networks:
+      - backendd
+    environment:
+      POSTGRES_USER: "postgres"
+      POSTGRES_PASSWORD: "postgres"
+
+
+
+  vote:
+    build: vote/.
+    ports:
+    - 5000:80
+    container_name: "voteB"
+    networks:
+      - frontendd
+
+
+  worker:
+    build:
+      context: worker/.
+      dockerfile: Dockerfile.prod
+    container_name: "workerB"
+    networks:
+      - backendd
+      - frontendd
+
+
+  result:
+    build: result/.
+    ports: 
+    - 5001:80
+    container_name: "resultB"
+    networks:
+      - frontendd
+      - backendd
+
+
+
+networks:
+  frontendd:
+    driver: bridge
+    
+  backendd:
+    driver: bridge
