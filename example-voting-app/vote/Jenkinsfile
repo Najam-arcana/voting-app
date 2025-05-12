@@ -1,0 +1,35 @@
+pipeline{
+  agent: any
+  
+  stages{
+    stage('getCode'){
+      steps{
+        checkout scm  
+      }
+    }
+
+    stage('installDependencies'){
+      steps{
+        sh '''
+              python3 -m venv venv
+              . venv/bin/activate
+              pip install --upgrade pip
+              pip install -r requirements.txt
+          '''
+       }
+    }
+
+    stage('runApp'){
+      steps{
+          sh '''
+                . venv/bin/activate
+                nohup flask run --host=0.0.0.0 --port=5000 > app.log 2>&1 &
+                sleep 10
+                curl http://localhost:5000
+            '''
+        }
+    }
+    
+    
+  }
+}
