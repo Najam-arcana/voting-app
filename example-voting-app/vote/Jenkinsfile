@@ -18,7 +18,7 @@ pipeline {
 
         stage('Install Dependencies') {
             steps {
-                sh "pip install -r ${FILE_LOCATION}requirements.txt"
+                sh "pip install --no-cache-dir --upgrade --root=/tmp/pip-tmp -r ${FILE_LOCATION}requirements.txt"
             }
         }
 
