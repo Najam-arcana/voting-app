@@ -1,29 +1,28 @@
-pipeline{
+pipeline {
     agent {
-      docker{
-        image 'python:3.11-slim'
-      }
-    }
-  
-  stages{
-    stage('getCode'){
-      steps{
-        checkout scm  
-      }
-    }
-
-    stage('installDependencies'){
-      steps{
-        sh 'pip install -r requirements.txt' 
-       }
-    }
-
-    stage('runApp'){
-      steps{
-          sh 'python app.py'
+        docker {
+            image 'python:3.11-slim'
         }
     }
-    
-    
-  }
+
+    stages {
+        stage('Get Code') {
+            steps {
+                checkout scm
+            }
+        }
+
+        stage('Install Dependencies') {
+            steps {
+                sh 'pip install -r requirements.txt'
+            }
+        }
+
+        stage('Run App') {
+            steps {
+                sh 'python app.py'
+            }
+        }
+    }
 }
+
