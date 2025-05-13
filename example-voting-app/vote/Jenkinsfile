@@ -4,6 +4,10 @@ pipeline {
             image 'python:3.11-slim'
         }
     }
+    
+    environment {
+        FILE_LOCATION = 'example-voting-app/vote/' 
+    }
 
     stages {
         stage('Get Code') {
@@ -14,7 +18,7 @@ pipeline {
 
         stage('Install Dependencies') {
             steps {
-                sh 'pip install -r requirements.txt'
+                sh "pip install -r ${FILE_LOCATION}requirements.txt"
             }
         }
 
