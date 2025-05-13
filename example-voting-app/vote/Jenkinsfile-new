@@ -4,11 +4,15 @@ pipeline{
   stages{
     
     stage('buildDockerImage'){
-      sh ' docker build -t voteApp . '
+      steps{
+        sh ' docker build -t voteApp . '
+      }
     }
     
     stage('runDockerImage'){
-      sh ' docker run -p 5000:5000 voteApp '
+      steps{
+        sh ' docker run -p 5000:5000 voteApp '
+      }
     }
     
   }
