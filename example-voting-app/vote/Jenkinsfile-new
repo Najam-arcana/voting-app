@@ -23,5 +23,11 @@ pipeline{
       }
     }
     
+    stage('pushingImage'){
+      steps{
+        sh ' docker push najamarcana/voteapp:latest '
+      }
+    }
+    
   }
 }
