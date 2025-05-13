@@ -1,11 +1,19 @@
 pipeline{
   agent any
+  
+  environment {
+        FILE_LOCATION = 'example-voting-app/vote/' 
+    }
+
 
   stages{
     
     stage('buildDockerImage'){
       steps{
-        sh ' docker build -t voteapp . '
+        sh ''' 
+          cd ${FILE_LOCATION}
+          docker build -t voteapp . 
+        '''
       }
     }
     
