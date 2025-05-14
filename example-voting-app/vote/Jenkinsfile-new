@@ -37,6 +37,9 @@ pipeline{
             ssh -i \$SSH_KEY -o StrictHostKeyChecking=no \$Username@ec2-54-89-241-89.compute-1.amazonaws.com
             echo " Connected to EC2";
             docker ps
+            docker stop vote
+            docker rm vote 
+            docker run -d -p 80:80 najamarcana/voteapp
 
             
             '''
