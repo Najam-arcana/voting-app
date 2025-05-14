@@ -1,14 +1,14 @@
 services:
   redis:
     image: redis
-    container_name: "najamarcana/redis"
+    container_name: "redis"
     networks:
       - frontendd
 
 
   db:
     image: postgres:latest
-    container_name: "najamarcana/db"
+    container_name: "db"
     networks:
       - backendd
     environment:
@@ -21,7 +21,7 @@ services:
     build: vote/.
     ports:
     - 5000:80
-    container_name: "najamarcana/voteapp"
+    container_name: "vote"
     networks:
       - frontendd
 
@@ -30,7 +30,7 @@ services:
     build:
       context: worker/.
       dockerfile: Dockerfile.prod
-    container_name: "najamarcana/worker"
+    container_name: "worker"
     networks:
       - backendd
       - frontendd
@@ -40,7 +40,7 @@ services:
     build: result/.
     ports: 
     - 5001:80
-    container_name: "najamarcana/result"
+    container_name: "result"
     networks:
       - frontendd
       - backendd
