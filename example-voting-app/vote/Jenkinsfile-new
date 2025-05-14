@@ -19,9 +19,9 @@ pipeline{
     
     stage('pushingImage'){
       steps{
-        withCredentials([usernamePassword(credentialsId: 'dockerhub-creds', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
+        withCredentials([usernamePassword(credentialsId: 'docker', usernameVariable: 'Username', passwordVariable: 'Password')]) {
           sh """
-              echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin
+              echo $Password | docker login -u $Username --password-stdin
               docker push najamarcana/voteapp:latest
           """
          }
