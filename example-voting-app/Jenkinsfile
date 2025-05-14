@@ -1,0 +1,56 @@
+pipeline{
+  agent any
+  
+  environment {
+        FILE_LOCATION = 'example-voting-app/' 
+    }
+
+
+  stages{
+    
+    stage('buildDockerCompose'){
+      steps{
+        sh ''' 
+          cd ${FILE_LOCATION}
+          docker compose -d  
+        '''
+      }
+    }
+    
+    stage('pushingImage'){
+      steps{
+        withCredentials([usernamePassword(credentialsId: 'docker', usernameVariable: 'Username', passwordVariable: 'Password')]) {
+          sh """
+              echo $Password | docker login -u $Username --password-stdin
+              docker push najamarcana/voteapp:latest
+              docker push najamarcana/worker:latest
+              docker push najamarcana/result:latest
+              docker push najamarcana/db:latest
+              docker push najamarcana/redis:latest
+          """
+         }
+      }
+    }
+    
+    
+    stage('deployImage'){
+    steps{
+      withCredentials([sshUserPrivateKey(credentialsId: 'ec2', keyFileVariable: 'SSH_KEY', usernameVariable: 'Username')]){
+      
+        sh ''' 
+          ssh -i \$SSH_KEY -o StrictHostKeyChecking=no \$Username@ec2-54-89-241-89.compute-1.amazonaws.com << EOF
+            echo "Connected to EC2"
+            docker ps
+            docker stop vote || true
+            docker rm vote || true
+            docker run -d -p 8000:80 --name vote najamarcana/voteapp
+            
+        '''
+      }
+    }
+  }
+
+    
+    
+  }
+}
