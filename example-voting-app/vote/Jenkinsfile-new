@@ -40,7 +40,6 @@ pipeline{
             docker stop vote || true
             docker rm vote || true
             docker run -d -p 8000:80 --name vote najamarcana/voteapp
-          EOF
         '''
       }
     }
