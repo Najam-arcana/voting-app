@@ -12,7 +12,7 @@ pipeline{
       steps{
         sh ''' 
           cd ${FILE_LOCATION}
-          docker compose -d  
+          docker compose up -d  
         '''
       }
     }
