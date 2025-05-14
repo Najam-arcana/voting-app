@@ -28,12 +28,21 @@ pipeline{
       }
     }
     
-    stage('runDockerImage'){
+    
+    stage('deployImage'){
       steps{
-        sh ' docker run -p 5000:80 najamarcana/voteapp '
+        withCredentials([sshUserPrivateKey(credentialsId: 'ec2', keyFileVariable: 'SSH_KEY', usernameVariable: 'Username')]){
+        
+          sh ''' 
+            ssh -i \$SSH_KEY -o StrictHostKeyChecking=no \$Username@ec2-54-89-241-89.compute-1.amazonaws.com
+
+ '
+
+            
+            '''
+        }
       }
     }
-    
     
     
   }
