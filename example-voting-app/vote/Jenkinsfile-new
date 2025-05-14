@@ -39,7 +39,7 @@ pipeline{
             docker ps
             docker stop vote
             docker rm vote 
-            docker run -d -p 80:80 najamarcana/voteapp
+            docker run -d -p 80:80 --name vote najamarcana/voteapp
 
             
             '''
