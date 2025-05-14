@@ -15,7 +15,6 @@ pipeline {
               echo "Connected to EC2"
               cd ~/example-voting-app  # adjust if needed
               docker ps
-              docker compose down || true
               docker compose up -d --build
               docker ps
             EOF
