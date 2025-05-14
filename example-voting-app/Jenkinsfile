@@ -8,7 +8,10 @@ pipeline {
   stages {
   
     stage('dir'){
-      sh ' cd $FILE_LOCATION '
+    
+      steps{
+        sh ' cd $FILE_LOCATION '
+      }
     }
     
     stage('deployImage') {
