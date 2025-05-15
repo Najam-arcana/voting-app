@@ -24,7 +24,9 @@ pipeline{
         withCredentials([usernamePassword(credentialsId: 'docker', usernameVariable: 'Username', passwordVariable: 'Password')]) {
           sh """
               echo $Password | docker login -u $Username --password-stdin
-              docker push voteapp:latest
+              docker push najamarcana/voteapp:latest
+              docker push najamarcana/worker:latest
+              docker push najamarcana/resultapp:latest
           """
          }
       }
