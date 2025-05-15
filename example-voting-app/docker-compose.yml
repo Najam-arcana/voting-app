@@ -16,7 +16,7 @@ services:
 
   vote:
     build: vote/.
-    image: najamarcana/voteapp:latest
+    image: najamarcana/voteapp:${BUILD_TAG}
     ports:
       - 8000:80
     container_name: "vote"
@@ -27,7 +27,7 @@ services:
     build:
       context: worker/.
       dockerfile: Dockerfile.prod
-    image: najamarcana/worker:latest
+    image: najamarcana/worker:${BUILD_TAG}
     container_name: "worker"
     networks:
       - backendd
@@ -35,7 +35,7 @@ services:
 
   result:
     build: result/.
-    image: najamarcana/resultapp:latest
+    image: najamarcana/resultapp:${BUILD_TAG}
     ports:
       - 8001:80
     container_name: "result"

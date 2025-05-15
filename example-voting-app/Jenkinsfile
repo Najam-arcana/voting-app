@@ -3,6 +3,7 @@ pipeline{
   
   environment {
         FILE_LOCATION = 'example-voting-app/' 
+        BUILD_TAG = "build-${BUILD_NUMBER}"
     }
 
 
@@ -13,7 +14,9 @@ pipeline{
       steps{
         sh ''' 
           cd ${FILE_LOCATION}
-          docker compose up -d
+          echo "Using tag: ${BUILD_TAG}"
+          export BUILD_TAG=${BUILD_TAG}
+          docker compose build
         '''
       }
     }
@@ -26,15 +29,15 @@ pipeline{
           echo $PASSWORD | docker login -u $USERNAME --password-stdin
 
           for i in {1..3}; do
-            docker push najamarcana/voteapp:latest && break || sleep 10
+            docker push najamarcana/voteapp:${BUILD_TAG} && break || sleep 10
           done
 
           for i in {1..3}; do
-            docker push najamarcana/worker:latest && break || sleep 10
+            docker push najamarcana/worker:${BUILD_TAG} && break || sleep 10
           done
 
           for i in {1..3}; do
-            docker push najamarcana/resultapp:latest && break || sleep 10
+            docker push najamarcana/resultapp:${BUILD_TAG} && break || sleep 10
           done
         '''
       }
