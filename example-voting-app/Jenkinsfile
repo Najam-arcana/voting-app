@@ -47,23 +47,26 @@ pipeline{
     
     stage('Commit .env file') {
       steps {
-        sshagent(['jenkins-deploy-key']) {
+        withCredentials([sshUserPrivateKey(credentialsId: 'jenkins-deploy-key', keyFileVariable: 'SSH_KEY', usernameVariable: 'SSH_USER')]) {
           sh '''
-          git config --global user.email "muhammad.najam@arcanainfo.com"
-          git config --global user.name "Najam-arcana"
+            git config --global user.email "muhammad.najam@arcanainfo.com"
+            git config --global user.name "Najam-arcana"
 
-          git clone git@github.com:Najam-arcana/voting-app.git
-          cd voting-app/example-voting-app
+            export GIT_SSH_COMMAND="ssh -i $SSH_KEY -o StrictHostKeyChecking=no"
 
-          echo "${BUILD_NUMBER}" > .env
+            git clone git@github.com:Najam-arcana/voting-app.git
+            cd voting-app/example-voting-app
 
-          git add .env
-          git commit -m "Add .env from Jenkins"
-          git push origin main
+            echo "${BUILD_NUMBER}" > .env
+
+            git add .env
+            git commit -m "Add .env from Jenkins"
+            git push origin main
           '''
         }
-       }
       }
+    }
+
 
 
 
