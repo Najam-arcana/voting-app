@@ -1,34 +1,61 @@
-pipeline {
+pipeline{
   agent any
-
+  
   environment {
-    FILE_LOCATION = 'example-voting-app/' 
+        FILE_LOCATION = 'example-voting-app/' 
+    }
+
+
+  stages{
+    
+
+    stage('Checkout Code') {
+      steps {
+        git 'https://github.com/Najam-arcana/voting-app.git' 
+      }
+    }
+    
+    stage('buildDockerImage'){
+      steps{
+        sh ''' 
+          cd ${FILE_LOCATION}
+          docker compose up 
+        '''
+      }
+    }
+
+
+    stage('pushingImage'){
+      steps{
+        withCredentials([usernamePassword(credentialsId: 'docker', usernameVariable: 'Username', passwordVariable: 'Password')]) {
+          sh """
+              echo $Password | docker login -u $Username --password-stdin
+              docker push voteapp:latest
+          """
+         }
+      }
+    }
+
+
+    
+    stage('deployImage'){
+    steps{
+      withCredentials([sshUserPrivateKey(credentialsId: 'ec2', keyFileVariable: 'SSH_KEY', usernameVariable: 'Username')]){
+      
+        sh ''' 
+          ssh -i \$SSH_KEY -o StrictHostKeyChecking=no \$Username@ec2-54-89-241-89.compute-1.amazonaws.com << EOF
+            echo "Connected to EC2"
+            docker ps
+            docker stop vote || true
+            docker rm vote || true
+            docker run -d -p 8000:80 --name vote najamarcana/voteapp
+            
+        '''
+      }
+    }
   }
 
-  stages {
-  
-    stage('dir'){
     
-      steps{
-        sh ' cd $FILE_LOCATION '
-      }
-    }
     
-    stage('deployImage') {
-      steps {
-        withCredentials([sshUserPrivateKey(credentialsId: 'ec2', keyFileVariable: 'SSH_KEY', usernameVariable: 'Username')]) {
-          sh '''
-            ssh -i $SSH_KEY -o StrictHostKeyChecking=no $Username@ec2-54-89-241-89.compute-1.amazonaws.com << 'EOF'
-              echo "Connected to EC2"
-              cd ~/example-voting-app  # adjust if needed
-              docker ps
-              docker compose up -d --build
-              docker ps
-            EOF
-          '''
-        }
-      }
-    }
   }
 }
-
