@@ -16,10 +16,6 @@ pipeline{
           cd ${FILE_LOCATION}
           echo "Using tag: ${BUILD_TAG}"
           export BUILD_TAG=${BUILD_TAG}
-          echo "${BUILD_TAG}" > .env
-          git add .env
-          git commit -m "adding env"
-          git push 
           docker compose build
         '''
       }
@@ -46,7 +42,26 @@ pipeline{
         '''
       }
     }
-  }
+    }
+    
+    
+    stage('Commit .env file') {
+      steps {
+        sshagent(['jenkins-deploy-key']) {
+          sh '''
+          git config --global user.email "muhammad.najam@arcanainfo.com"
+          git config --global user.name "Najam-arcana"
+
+          git clone git@github.com:Najam-arcana/voting-app.git
+          cd your-repo
+
+          echo "${BUILD_NUMBER}" > .env
+
+          git add .env
+          git commit -m "Add .env from Jenkins"
+          git push origin main
+          '''
+        }
 
 
 
