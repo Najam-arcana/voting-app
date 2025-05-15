@@ -16,6 +16,10 @@ pipeline{
           cd ${FILE_LOCATION}
           echo "Using tag: ${BUILD_TAG}"
           export BUILD_TAG=${BUILD_TAG}
+          echo "${BUILD_TAG}" > .env
+          git add .env
+          git commit -m "adding env"
+          git push 
           docker compose build
         '''
       }
@@ -60,6 +64,7 @@ pipeline{
 
             # Pull latest docker-compose.yml (if not already there)
             curl -O https://raw.githubusercontent.com/Najam-arcana/voting-app/main/example-voting-app/docker-compose.yml
+            curl -O https://raw.githubusercontent.com/Najam-arcana/voting-app/main/example-voting-app/.env
 
             docker compose pull
             docker compose up -d
