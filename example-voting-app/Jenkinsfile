@@ -57,7 +57,7 @@ pipeline{
             git clone git@github.com:Najam-arcana/voting-app.git
             cd voting-app/example-voting-app
 
-            echo "${BUILD_NUMBER}" > .env
+            echo "${BUILD_TAG}" > .env
 
             git add .env
             git commit -m "Add .env from Jenkins"
