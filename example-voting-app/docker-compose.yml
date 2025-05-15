@@ -5,7 +5,6 @@ services:
     networks:
       - frontendd
 
-
   db:
     image: postgres:latest
     container_name: "db"
@@ -15,41 +14,38 @@ services:
       POSTGRES_USER: "postgres"
       POSTGRES_PASSWORD: "postgres"
 
-
-
   vote:
     build: vote/.
+    image: najamarcana/voteapp:latest
     ports:
-    - 8000:80
+      - 8000:80
     container_name: "vote"
     networks:
       - frontendd
-
 
   worker:
     build:
       context: worker/.
       dockerfile: Dockerfile.prod
+    image: najamarcana/worker:latest
     container_name: "worker"
     networks:
       - backendd
       - frontendd
 
-
   result:
     build: result/.
-    ports: 
-    - 8001:80
+    image: najamarcana/resultapp:latest
+    ports:
+      - 8001:80
     container_name: "result"
     networks:
       - frontendd
       - backendd
 
-
-
 networks:
   frontendd:
     driver: bridge
-    
   backendd:
     driver: bridge
+
