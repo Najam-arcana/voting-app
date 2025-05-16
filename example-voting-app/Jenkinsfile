@@ -114,7 +114,7 @@ pipeline{
             curl -s -H 'Cache-Control: no-cache' -o .env https://raw.githubusercontent.com/Najam-arcana/voting-app/main/example-voting-app/.env
 
 
-            docke compose down
+            docker compose down
             docker compose pull
             docker compose up -d
             docker ps 
