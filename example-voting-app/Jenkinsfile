@@ -6,12 +6,13 @@ pipeline{
         BUILD_TAG = "build-${BUILD_NUMBER}"
     }
 
-
-  stages{
   
   triggers {
     githubPush() // Triggered by GitHub webhook
   }
+  
+  stages{
+  
   
   stage('Check for Jenkins Skip') {
   steps {
