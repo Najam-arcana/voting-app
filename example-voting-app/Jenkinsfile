@@ -16,18 +16,17 @@ pipeline{
   
   stage('Check for Jenkins Skip') {
   steps {
-    catchError(buildResult: 'SUCCESS', stageResult: 'SKIPPED') {
-      script {
-        def skipCommit = sh(script: "git log -1 --pretty=%B", returnStdout: true).trim()
-        if (skipCommit.contains("[jenkins-skip]")) {
-          echo "Skipping build due to [jenkins-skip] commit."
-          error("Intentionally skipped build")
+    script {
+          def skipCommit = sh(script: "git log -1 --pretty=%B", returnStdout: true).trim()
+          if (skipCommit.contains("[jenkins-skip]")) {
+            echo "Skipping build due to [jenkins-skip] commit."
+            currentBuild.result = 'SUCCESS'
+            // Immediately exit the pipeline
+            error("Build skipped by [jenkins-skip] tag")
+          }
         }
       }
     }
-  }
-}
-
 
     
     stage('buildDockerImage'){
