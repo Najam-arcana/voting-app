@@ -63,7 +63,7 @@ pipeline{
             fi
             cd example-voting-app
 
-            echo "${BUILD_TAG}" > .env
+            echo "BUILD_TAG=${BUILD_TAG}" > .env
 
             git add .env
             git commit -m "Add .env from Jenkins"
