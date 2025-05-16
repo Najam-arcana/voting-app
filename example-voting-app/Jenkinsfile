@@ -8,6 +8,24 @@ pipeline{
 
 
   stages{
+  
+  triggers {
+    githubPush() // Triggered by GitHub webhook
+  }
+  
+  stage('Check for Jenkins Skip') {
+  steps {
+    script {
+          def skipCommit = sh(script: "git log -1 --pretty=%B", returnStdout: true).trim()
+          if (skipCommit.contains("[jenkins-skip]")) {
+            echo "Skipping build due to [jenkins-skip] commit."
+            currentBuild.result = 'SUCCESS'
+            // Immediately exit the pipeline
+            error("Build skipped by [jenkins-skip] tag")
+          }
+        }
+      }
+    }
 
     
     stage('buildDockerImage'){
@@ -66,7 +84,7 @@ pipeline{
             echo "BUILD_TAG=${BUILD_TAG}" > .env
 
             git add .env
-            git commit -m "Add .env from Jenkins"
+            git commit -m "Add .env from Jenkins [jenkins-skip]"
             git push origin main
           '''
         }
