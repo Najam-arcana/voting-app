@@ -16,7 +16,7 @@ pipeline{
   
     stage('Check for Jenkins Skip') {
     steps {
-      catchError(buildResult: 'SUCCESS', stageResult: 'SKIPPED') {
+      catchError(buildResult: 'SUCCESS', stageResult: 'NOT_BUILT') {
         script {
           def skipCommit = sh(script: "git log -1 --pretty=%B", returnStdout: true).trim()
           if (skipCommit.contains("[jenkins-skip]")) {
