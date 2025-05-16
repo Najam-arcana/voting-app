@@ -135,14 +135,14 @@ ENDSSH
 
             echo "Connected to EC2"
             docker ps
-            if docker ps | grep voteapp; then
+            if docker ps | grep najamarcana/voteapp; then
                 aws sns publish \
-                  --topic-arn arn:aws:sns:us-east-1:664418985079:container-up:c41f5931-29ef-47b4-8625-ecbc75aed1e1 \
+                  --topic-arn arn:aws:sns:us-east-1:664418985079:container-up \
                   --message "✅ Docker containers are running on EC2: $(hostname)" \
                   --region us-east-1
             else
                 aws sns publish \
-                  --topic-arn arn:aws:sns:us-east-1:664418985079:container-up:c41f5931-29ef-47b4-8625-ecbc75aed1e1 \
+                  --topic-arn arn:aws:sns:us-east-1:664418985079:container-up \
                   --message "❌ Docker containers failed to start on EC2: $(hostname)" \
                   --region us-east-1
             fi
