@@ -14,19 +14,19 @@ pipeline{
   stages{
   
   
-    stage('Check for Jenkins Skip') {
-    steps {
-      catchError(buildResult: 'SUCCESS', stageResult: 'NOT_BUILT') {
-        script {
-          def skipCommit = sh(script: "git log -1 --pretty=%B", returnStdout: true).trim()
-          if (skipCommit.contains("[jenkins-skip]")) {
-            echo "Skipping build due to [jenkins-skip] commit."
-            error("Intentionally skipped build")
-          }
+  stage('Check for Jenkins Skip') {
+  steps {
+    catchError(buildResult: 'SUCCESS', stageResult: 'SKIPPED') {
+      script {
+        def skipCommit = sh(script: "git log -1 --pretty=%B", returnStdout: true).trim()
+        if (skipCommit.contains("[jenkins-skip]")) {
+          echo "Skipping build due to [jenkins-skip] commit."
+          error("Intentionally skipped build")
         }
       }
     }
   }
+}
 
 
     
@@ -118,7 +118,7 @@ pipeline{
             docker compose pull
             docker compose up -d
             docker ps 
-            echo "workinggg"
+            echo "working"
 ENDSSH
         '''
       }
